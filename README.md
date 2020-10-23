@@ -21,4 +21,9 @@ To get those exports you need:
        * For `results14.jsonl`, you need to modify the `config/settings.py` with `cpc_14` as the database, same for `result13.jsonl`
        * For `result_senat.jsonl`, you need to switch to the `nossenateurs` branch and then export
 
+You also need:
+  
+  - `deputes.json` that you can get with `wget nosdeputes.fr/deputes/json -O deputes.json`
+  - `senateurs.json` with `wget http://nossenateurs.fr/senateurs/json -O senateurs.json`
+
 Then you can do `python first_said.py`
