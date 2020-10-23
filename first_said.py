@@ -1,9 +1,14 @@
 import json, re
 
+DEPUTES = json.load(open("deputes.json"))['deputes']
+DEPUTES = {dep['depute']['id']:dep['depute'] for dep in DEPUTES}
+SENATEURS = json.load(open("senateurs.json"))['senateurs']
+SENATEURS = {dep['senateur']['id']:dep['senateur'] for dep in SENATEURS}
+
 said = set()
 def process(i, who):
     i = i['fields']
-    inter = i['intervention']
+    inter = i['intervention'].replace('<p>', '').replace('</p>', '')
     for word in re.compile(r'\w+').findall(inter):
         if len(word) > 1:
             if word[0].isupper() and word[1:].islower():
@@ -22,14 +27,37 @@ def process(i, who):
         if word_ not in said:
             print(i['date'], word)
             pos = inter.index(word)
-            debut = pos - 50
+            debut = pos - 70
             if debut < 0:
                 debut = 0
-            fin = pos + 50
+            fin = pos + 70 + len(word)
             if fin > len(inter):
                 fin = len(inter) - 1
-            print('      contexte:', inter[debut:fin])
-            print('      url     :', f"https://nosdeputes.fr/seance/{i['seance_id']}#inter_{i['md5']}")
+
+            if debut > 0:
+                if inter[debut-1] != ' ':
+                    debut = inter.index(' ', debut)
+                    if debut == -1:
+                        debut = 0
+            if fin < len(inter) - 1:
+                if inter[fin+1] != ' ':
+                    fin = inter.rfind(' ', 0, fin)
+                    if fin == -1:
+                        fin = len(inter) - 1
+
+
+            contexte = '"' + inter[debut:fin].strip() + '"'
+
+            parl_id = i['parlementaire_id']
+            if who == 'senateur':
+                if parl_id in SENATEURS and SENATEURS[parl_id]['twitter']:
+                    contexte += ' par ' + '@' + SENATEURS[parl_id]['twitter']
+                contexte += f" https://nossenateurs.fr/seance/{i['seance_id']}#inter_{i['md5']}"
+            else:
+                if parl_id in DEPUTES and DEPUTES[parl_id]['twitter']:
+                    contexte += ' par ' + '@' + DEPUTES[parl_id]['twitter']
+                contexte += f" https://nosdeputes.fr/15/seance/{i['seance_id']}#inter_{i['md5']}"
+            print('      contexte:', contexte)
         said.add(word_)
 
 def read_i():
