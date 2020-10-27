@@ -41,13 +41,13 @@ def process(i, who):
                     if debut == -1:
                         debut = 0
             if fin < len(inter) - 1:
-                if inter[fin+1] != ' ':
+                if inter[fin] != ' ':
                     fin = inter.rfind(' ', 0, fin)
                     if fin == -1:
                         fin = len(inter) - 1
 
 
-            contexte = '"' + inter[debut:fin].strip() + '"'
+            contexte = '"' + inter[debut:fin+1].strip() + '"'
 
             parl_id = i['parlementaire_id']
             if who == 'senateur':
