@@ -13,7 +13,9 @@ def process(i, who):
         if len(word) > 1:
             if word[0].isupper() and word[1:].islower():
                 # prénom / nom
-                continue
+                # oula faux positif "Goals"
+                # continue
+                pass
         found_number = False
         for n in '0123456789':
             if n in word:
@@ -25,7 +27,6 @@ def process(i, who):
 
         word_ = word.lower()
         if word_ not in said:
-            print(i['date'], word)
             pos = inter.index(word)
             debut = pos - 70
             if debut < 0:
@@ -57,7 +58,8 @@ def process(i, who):
                 if parl_id in DEPUTES and DEPUTES[parl_id]['twitter']:
                     contexte += ' par ' + '@' + DEPUTES[parl_id]['twitter']
                 contexte += f" https://nosdeputes.fr/15/seance/{i['seance_id']}#inter_{i['md5']}"
-            print('      contexte:', contexte)
+            if word.lower() == word:
+                print(json.dumps(word + '\n\n' + contexte, ensure_ascii=False))
         said.add(word_)
 
 def read_i():
@@ -104,7 +106,6 @@ while i or i2:
         try:
             i = next(i_it)
         except StopIteration:
-            print('end of i file')
             i = None
         refresh_dates()
 
@@ -113,6 +114,5 @@ while i or i2:
         try:
             i2 = next(i2_it)
         except StopIteration:
-            print('end of i2 file')
             i2 = None
         refresh_dates()
