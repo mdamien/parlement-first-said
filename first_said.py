@@ -1,4 +1,4 @@
-import json, re
+import json, re, sys
 
 DEPUTES = json.load(open("deputes.json"))['deputes']
 DEPUTES = {dep['depute']['id']:dep['depute'] for dep in DEPUTES}
@@ -103,6 +103,7 @@ while i or i2:
 
     refresh_dates()
     while i and (i_date <= i2_date or i2 is None):
+        print(i_date, file=sys.stderr)
         process(i, "député")
         try:
             i = next(i_it)
@@ -111,6 +112,7 @@ while i or i2:
         refresh_dates()
 
     while i2 and (i2_date <= i_date or i is None):
+        print(i2_date, file=sys.stderr)
         process(i2, 'senateur')
         try:
             i2 = next(i2_it)
