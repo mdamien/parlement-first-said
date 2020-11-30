@@ -9,7 +9,7 @@ said = set()
 def process(i, who):
     i = i['fields']
     inter = i['intervention'].replace('<p>', ' ').replace('</p>', ' ').replace('<i>', ' ').replace('</i>', ' ')
-    for word in re.compile(r'\w+').findall(inter):
+    for word in re.compile(r'[\w-]+').findall(inter):
         if len(word) > 1:
             if word[0].isupper() and word[1:].islower():
                 # prénom / nom
