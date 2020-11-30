@@ -8,7 +8,7 @@ SENATEURS = {dep['senateur']['id']:dep['senateur'] for dep in SENATEURS}
 said = set()
 def process(i, who):
     i = i['fields']
-    inter = i['intervention'].replace('<p>', '').replace('</p>', '')
+    inter = i['intervention'].replace('<p>', ' ').replace('</p>', ' ').replace('<i>', ' ').replace('</i>', ' ')
     for word in re.compile(r'\w+').findall(inter):
         if len(word) > 1:
             if word[0].isupper() and word[1:].islower():
@@ -37,8 +37,9 @@ def process(i, who):
 
             if debut > 0:
                 if inter[debut-1] != ' ':
-                    debut = inter.index(' ', debut)
-                    if debut == -1:
+                    try:
+                        debut = inter.index(' ', debut)
+                    except:
                         debut = 0
             if fin < len(inter) - 1:
                 if inter[fin] != ' ':
