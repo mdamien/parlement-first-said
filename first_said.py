@@ -23,7 +23,7 @@ def process(i, who):
                 found_number = True
                 break
         if found_number:
-            break
+            continue
 
         word_ = word.lower()
         if word_ not in said:
